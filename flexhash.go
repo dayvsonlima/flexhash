@@ -9,20 +9,27 @@ type H map[string]interface{}
 
 // Extract .
 func Extract(element interface{}, hashKeys ...string) H {
-	a, _ := json.Marshal(element)
 
-	var b H
+	flexHashElement := ToFlex(element)
+
 	c := make(H)
 
-	json.Unmarshal(a, &b)
-
-	for key, value := range b {
+	for key, value := range flexHashElement {
 		if inArray(hashKeys, key) {
 			c[key] = value
 		}
 	}
 
 	return c
+}
+
+// ToFlex .
+func ToFlex(element interface{}) H {
+	a, _ := json.Marshal(element)
+
+	var b H
+	json.Unmarshal(a, &b)
+	return b
 }
 
 func inArray(s []string, field string) bool {
